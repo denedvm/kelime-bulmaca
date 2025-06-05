@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kelime Bulmaca Girişi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #0b1a38; /* koyu lacivert */
+      color: white;
+      margin: 0;
+      padding: 40px 20px;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #formContainer {
+      background: rgba(255, 255, 255, 0.15); /* açık yarı saydam beyaz */
+      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      max-width: 350px;
+      width: 90%;
+    }
+
+    input {
+      font-size: 1.2rem;
+      padding: 10px;
+      width: 90%;
+      max-width: 300px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #3a5ba0; /* orta mavimsi ton */
+      color: white;
+      transition: background-color 0.3s ease;
+      width: 95%;
+      max-width: 320px;
+    }
+    button:hover {
+      background-color: #2a4374;
+    }
+
+    #jumpscare {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #jumpscare img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <div id="formContainer">
+    <h1>Kelime Bulmaca Girişi</h1>
+    <input type="text" id="nameInput" placeholder="İsim Soyisim giriniz" autocomplete="off" autocorrect="off" autocapitalize="none"><br>
+    <input type="text" id="keywordInput" placeholder="Anahtar kelimeyi giriniz" autocomplete="off" autocorrect="off" autocapitalize="none"><br>
+    <button onclick="checkEntry()">Giriş Yap</button>
+  </div>
+
+  <div id="jumpscare">
+    <img src="https://static.wikia.nocookie.net/joke-battles/images/9/96/Jeff_the_killer.jpg/revision/latest?cb=20160912192140" alt="Scary Face" />
+    <audio id="scare-sound" preload="auto">
+      <source src="https://www.myinstants.com/media/sounds/scream.mp3" type="audio/mpeg" />
+    </audio>
+  </div>
+
+  <script>
+    const allowedUsers = [
+      "ADEM KHALE", "AHMET TALHA ÇAKIR", "ALİ MUHARREM ŞÜKÜR", "AMBARE CIDDE CIBRIL", "AMINE YAKHOUB", "BEDİRHAN BİNGÖL",
+      "BOUKHARI ANOUR", "DANICKSON FOUCAULT MUSTAFA", "EMİR SALİH UFLAZ", "FARUK ENES KILIÇ", "FATAH ABDURRAHMAN",
+      "HALİL SELİM AKDENİZ", "HANNO AHMAT", "HASAN EREN TOPAL", "HASSAN İBRAHİM", "HİLMİ KEMAL PEKGÖZ", "ISSA KHAMIS",
+      "İSMAİL BAŞKAYA", "KEREM UZUNMEHMET", "LUTHFI FATIN ABDUL KARIM", "MEHMET İSMATOV SAİD", "MUHAMMET ATAMAN",
+      "MUHAMMET İZZET AYGIN", "NABİL ZAKHRAWI SALAM", "OMAR SHARF ZUHAIR ALSALAYMEH", "OUSMANE CHOUAYB", "RAMDANI RAMDANI",
+      "RECEP ENSAR KONYALI", "SHAHANWAZ MARTIN MTHIZE", "SYAUQI GARDA TAQIYYA", "YOUSSOUF MOUKHTAR", "YUSUF SELİM TAKTAK",
+      "BİLAL", "ABDÜLKADİR", "MUSTAFA ABDUURAHMAN", "SAHIP ALİ", "RAŞİT", "ABDÜLHAFIZ"
+    ];
+
+    function toUpperTR(text) {
+      return text.toLocaleUpperCase('tr-TR').trim();
+    }
+
+    function checkEntry() {
+      const name = document.getElementById("nameInput").value;
+      const keyword = document.getElementById("keywordInput").value;
+
+      if (toUpperTR(keyword) !== "AAA") {
+        alert("Anahtar kelime hatalı!");
+        return;
+      }
+
+      const formattedName = toUpperTR(name);
+      if (!allowedUsers.some(user => toUpperTR(user) === formattedName)) {
+        alert("Bu isim listede yok!");
+        return;
+      }
+
+      const entries = JSON.parse(localStorage.getItem("entries")) || [];
+      const alreadyExists = entries.find(e => toUpperTR(e.name) === formattedName);
+
+      if (!alreadyExists) {
+        entries.push({ name: formattedName });
+        localStorage.setItem("entries", JSON.stringify(entries));
+      }
+
+      const jumpscare = document.getElementById("jumpscare");
+      jumpscare.style.display = "flex";
+      document.getElementById("scare-sound").play();
+
+      setTimeout(() => {
+        window.location.href = "liste.html";
+      }, 2700);
+    }
+  </script>
+</body>
+</html>
